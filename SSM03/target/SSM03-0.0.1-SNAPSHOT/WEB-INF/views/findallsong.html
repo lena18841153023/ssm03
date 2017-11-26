@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>歌曲信息</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<!-- 模态框（Modal） -->
+<!-- modal2 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">修改歌曲信息</h4>
+            </div>
+            <form role="form" action="KnowUpdateServlet" method="post" id="fm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name1">歌曲名称</label> <input type="text"
+                                                            class="form-control" id="title2" placeholder="请输入标题"
+                                                            name="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="name2">歌曲链接</label> <input type="text"
+                                                            class="form-control" id="title2" placeholder="请输入标题"
+                                                            name="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="name3">歌手编号</label> <input type="text"
+                                                            class="form-control" id="title2" placeholder="请输入标题"
+                                                            name="title">
+                    </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭</button>
+                    <button type="button" class="btn btn-primary" id="btn3">确认修改</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="container">
+    <h3>歌曲信息</h3>
+    <h6 align="right"><a href="savesong.html" >发布歌曲信息</a></h6>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>歌曲编号</th>
+            <th>歌曲名字</th>
+            <th>歌曲链接</th>
+            <th>歌手编号</th>
+            <th>删除信息</th>
+            <th>修改信息</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>John</td>
+            <td>Doe</td>
+            <td>john</td>
+            <td>john</td>
+            <td><button>删除</button></td>
+            <td><button class="btn-link r2" id="bt3"
+                        data-toggle="modal" data-target="#myModal2">修改</button></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

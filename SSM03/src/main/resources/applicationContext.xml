@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <!-- 1-璁惧畾鑷姩鎵弿缁勪欢鐨刡ase package鍖� -->
+    <context:component-scan base-package="com"></context:component-scan>
+    <!-- 2-璇诲彇c3p0db.properties鐨勪俊鎭紝鐢熸垚鏁版嵁婧愯繛鎺ユ睜dataSource -->
+    <context:property-placeholder location="classpath:c3p0db.properties" />
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${connection.driverClass}"></property>
+        <property name="jdbcUrl" value="${connection.url}"></property>
+        <property name="user" value="${connection.username}"></property>
+        <property name="password" value="${connection.password}"></property>
+        <property name="minPoolSize" value="${c3p0.min_size}"></property>
+        <property name="maxPoolSize" value="${c3p0.max_size}"></property>
+        <property name="acquireIncrement" value="${c3p0.acquire_increment}"></property>
+        <property name="checkoutTimeout" value="${c3p0.timeout}"></property>
+        <property name="idleConnectionTestPeriod" value="${c3p0.idle_test_period}"></property>
+        <property name="maxStatements" value="${c3p0.max_statements}"></property>
+    </bean>
+    <!-- 3-渚濊禆dataSource锛岀敓鎴恠essionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="mapperLocations"  value="classpath:mapper/*.xml"></property>
+        <property name="configLocation" value="classpath:sqlMappingConfig.xml"></property>
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.company.dao.idao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+    <!-- 閰嶇疆浜嬪姟绠＄悊鍣� -->
+    <bean name="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 浜嬪姟绠＄悊 -->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 閰嶇疆 AOP -->
+    <aop:config>
+        <aop:pointcut expression="execution(* com.company.service.impl.*.*(..))" id="txPointCut"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
+    </aop:config>
+
+    <!-- 閰嶇疆娉ㄨВ锛屽疄鐜板姩鎬佽闂� -->
+    <mvc:annotation-driven></mvc:annotation-driven>
+    <!-- 瀹炵幇闈欐�佽闂� -->
+    <mvc:default-servlet-handler />
+    <!--<mvc:resources location="WEB-INF/views/" mapping="/views/*.html" />-->
+    <!-- 閰嶇疆瑙ｆ瀽鍣� -->
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"></property>
+        <property name="suffix" value=".html"></property>
+    </bean>
+
+
+    <!-- 閰嶇疆json瑙ｆ瀽鍣� -->
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorParameter" value="true"/>
+        <property name="parameterName" value="format"/>
+        <property name="ignoreAcceptHeader" value="false"/>
+        <property name="mediaTypes">
+            <value>
+                json=application/json
+                xml=application/xml
+                html=text/html
+            </value>
+        </property>
+        <property name="defaultContentType" value="text/html"/>
+    </bean>
+
+
+<!--    &lt;!&ndash; 鏂囦欢涓婁紶閰嶇疆 &ndash;&gt;
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="20971520"></property>
+        <property name="defaultEncoding" value="utf-8"></property>
+        <property name="resolveLazily" value="true"></property>
+    </bean>-->
+    <mvc:view-controller path="/router/regist" view-name="regist"></mvc:view-controller>
+    <mvc:view-controller path="/router/login" view-name="login"></mvc:view-controller>
+    <mvc:view-controller path="/router/showsinger" view-name="showsinger"></mvc:view-controller>
+    <mvc:view-controller path="/router/showsong" view-name="showsong"></mvc:view-controller>
+    <mvc:view-controller path="/router/findallsinger" view-name="findallsinger"></mvc:view-controller>
+    <mvc:view-controller path="/router/findallsong" view-name="findallsong"></mvc:view-controller>
+    <mvc:view-controller path="/router/echarts" view-name="echarts"></mvc:view-controller>
+    <mvc:view-controller path="/router/savesinger" view-name="savesinger"></mvc:view-controller>
+    <!--<mvc:view-controller path="/router/savesong" view-name="savesong"></mvc:view-controller>-->
+
+</beans>

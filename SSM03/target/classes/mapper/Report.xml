@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.dao.idao.ReportDao" >
+    <select id="showReport" resultType="Report">
+        SELECT t1.sname sname,t2.scount scount FROM t_singer t1 INNER JOIN (SELECT singerid,COUNT(*) scount FROM t_song GROUP BY singerid) t2 ON t1.singerid = t2.singerid;
+    </select>
+</mapper>

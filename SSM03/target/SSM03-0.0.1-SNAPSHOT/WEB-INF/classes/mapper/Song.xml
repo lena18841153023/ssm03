@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.dao.idao.SongDao">
+    <resultMap id="SongMap" type="Song">
+        <id column="songid" property="songid" jdbcType="INTEGER"/>
+        <result column="songname" property="songname" jdbcType="VARCHAR"/>
+        <result column="urlpath" property="urlpath" jdbcType="VARCHAR"/>
+        <result column="singerid" property="singerid" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="SingerMap" type="Song" extends="SongMap">
+        <association property="singer" javaType="Singer">
+            <id column="singerid" property="singerid" jdbcType="INTEGER" />
+            <result column="sname" property="sname" jdbcType="VARCHAR" />
+            <result column="birthday" property="birthday" jdbcType="DATE" />
+            <result column="region" property="region" jdbcType="VARCHAR" />
+        </association>
+    </resultMap>
+    <insert id="save" parameterType="Song" useGeneratedKeys="true" keyColumn="songid">
+        INSERT into t_song(songname, urlpath, singerid) VALUES (#{songname}, #{urlpath}, #{singerid})
+    </insert>
+    <delete id="delete" parameterType="int">
+        DELETE from t_song where songid = #{songid};
+    </delete>
+    <update id="update" parameterType="Song">
+        UPDATE t_song set songname = #{songname}, urlpath = #{urlpath}, singerid = #{singerid} where songid = #{songid};
+    </update>
+    <select id="findById" parameterType="int" resultMap="SingerMap">
+        select * from t_song t1, t_singer t2 where t1.songid = #{songid} and t1.singerid = t2.singerid;
+    </select>
+    <select id="findAll" resultMap="SingerMap">
+        select * from t_song t1, t_singer t2 where t1.singerid = t2.singerid;
+    </select>
+    <select id="findByName" parameterType="java.util.Map" resultMap="SingerMap">
+        select * from t_song t1, t_singer t2 where t1.songname like "%${songname}%" and t1.singerid = t2.singerid;
+    </select>
+</mapper>

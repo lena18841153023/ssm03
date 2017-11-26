@@ -1,0 +1,13 @@
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--绫诲瀷杞崲鍣�-->
+    <!-- <typeHandlers>
+        <typeHandler handler="com.mybatis.handler.HiredateHandler" javaType="java.util.Date" jdbcType="DATE" />
+    </typeHandlers> -->
+    <typeAliases>
+        <package name="com.company.dao.pojo"></package>
+        <package name="com.company.service.result"></package>
+    </typeAliases>
+</configuration>
